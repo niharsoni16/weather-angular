@@ -1,0 +1,310 @@
+<!-- <br />
+<ul class="nav nav-pills">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
+  </li>
+  <li class="nav-item" style="margin-left: 40px">
+    <a class="nav-link" href="#">History</a>
+  </li>
+  <li class="nav-item" style="margin-left: 40px">
+    <a class="nav-link" href="#">Favourites</a>
+  </li>
+</ul>
+
+<br />
+<br /> -->
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="medium"
+  color="#fff"
+  type="ball-spin-clockwise"
+  [fullScreen]="true"
+  ><p style="color: white">Loading...</p></ngx-spinner
+>
+
+<!-- <h1 class="header-above-card">Weather</h1> -->
+<div class="weather-card">
+  <div class="row-md-4">
+    <div class="border">
+      <div class="column-1">
+        <h3 class="comment">
+          Weather Comment : "{{ currentCondition?.comment }}"
+        </h3>
+        <h2 id="temp-left-card">
+          {{ temp ? currentCondition?.temp?.c : currentCondition?.temp?.f }}
+        </h2>
+        <p class="temp-degree" *ngIf="temp">&#8451;</p>
+        <p class="temp-degree" *ngIf="!temp">&#8457;</p>
+        <p id="region-search" [(ngModel)]="city">
+          {{ currentCondition?.dayhour }}
+        </p>
+        <!-- <p id="region-search" [(ngModel)]="city">Ahmedabad,Day-hour</p> -->
+        <p id="region-api" [(ngModel)]="city">{{ regionFromAPI }}</p>
+        <!-- <p id="region-api" [(ngModel)]="city">Ahmedabad,Gujarat,India</p> -->
+        <!-- <div class="img-back">
+        </div> -->
+        <img src="{{ currentCondition.iconURL }}" alt="Icon" class="img_Icon" />
+        <hr class="hr-first-col-1" />
+
+        <div class="expTable">
+          <mat-accordion multi="true">
+            <div *ngFor="let day of nextDays">
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title style="float: left; width: 33.33%">
+                    {{ day?.day }}
+                  </mat-panel-title>
+                  <mat-panel-description style="float: left; width: 33.33%">
+                    {{ day?.comment }}
+                    <img
+                      src="{{ day?.iconURL }}"
+                      alt="icon"
+                      class="exp_icon"
+                      style="float: left; width: 33.33%"
+                    />
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="progress">
+                  <div
+                    class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar"
+                    aria-valuenow="75"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    style="width: 50%"
+                  ></div>
+                </div>
+                <h6 class="exp_max_temp">
+                  <h2 class="exp_temp">
+                    {{ temp ? day?.max_temp?.c : day?.max_temp?.f }}
+                  </h2>
+                  <p class="exp_span-1" *ngIf="temp">&#8451;</p>
+                  <p class="exp_span-1" *ngIf="!temp">&#8457;</p>
+
+                  <p>Maximum</p>
+                </h6>
+                <h6 class="exp_min_temp">
+                  <h2 class="exp_temp">
+                    {{ temp ? day?.min_temp?.c : day?.min_temp?.f }}
+                    <p class="exp_span-2" *ngIf="temp">&#8451;</p>
+                    <p class="exp_span-2" *ngIf="!temp">&#8457;</p>
+                  </h2>
+                  <p>Minimum</p>
+                </h6>
+                <h6 class="exp_avg_temp">
+                  <h2 class="exp_temp">
+                    {{
+                      temp
+                        ? (day?.max_temp?.c + day?.min_temp?.c) / 2
+                        : (day?.max_temp?.f + day?.min_temp?.f) / 2
+                    }}
+                    <p class="exp_span-3" *ngIf="temp">&#8451;</p>
+                    <p class="exp_span-3" *ngIf="!temp">&#8457;</p>
+                  </h2>
+                  <p>Day Average</p>
+                </h6>
+              </mat-expansion-panel>
+            </div>
+          </mat-accordion>
+        </div>
+      </div>
+
+      <!-- Right side Column -->
+      <div class="column-2">
+        <!-- Radio button for Temperature -->
+        <div class="d-flex">
+          <input
+            class="form-control me-2"
+            id="search-region-box"
+            type="search"
+            placeholder="Region Search"
+            aria-label="Search"
+            [(ngModel)]="city"
+          />
+          <button class="button" type="submit" (click)="callData(city, true)">
+            Search
+          </button>
+        </div>
+        <!-- radio start -->
+        <div>
+          <div class="radio">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="flexRadioDefault"
+                id="flexRadioDefault2"
+                [value]="true"
+                [(ngModel)]="temp"
+              />
+              <label class="form-check-label" for="flexRadioDefault2">
+                Celcius
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="flexRadioDefault"
+                id="flexRadioDefault1"
+                [value]="false"
+                [(ngModel)]="temp"
+              />
+              <label class="form-check-label" for="flexRadioDefault1">
+                Farenheit
+              </label>
+            </div>
+          </div>
+
+          <div class="radio-2">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="flexRadioWind"
+                id="flexRadioDefault1"
+                [value]="true"
+                [(ngModel)]="wind_direction"
+              />
+              <label class="form-check-label" for="flexRadioDefault1">
+                KM
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="flexRadioWind"
+                id="flexRadioDefault1"
+                [value]="false"
+                [(ngModel)]="wind_direction"
+              />
+              <label class="form-check-label" for="flexRadioDefault1">
+                Mile
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- radio End -->
+        <hr class="col-2-top" />
+        <!-- weather Details -->
+        <h5 class="title-col-2">Weather Details</h5>
+        <hr class="hr2" />
+        <div class="detail">
+          <p class="col-2-humidity">Humidity</p>
+          <p class="col-2-temp">Temperature</p>
+          <p class="col-2-wind">Wind</p>
+        </div>
+        <p class="col-2-humidity-value">{{ currentCondition?.humidity }}</p>
+        <!-- <p class="col-2-humidity-value" >18</p> -->
+        <p class="col-2-temp-value">
+          {{ temp ? currentCondition?.temp?.c : currentCondition?.temp?.f }}
+          <span *ngIf="temp">&#8451;</span>
+          <span *ngIf="!temp">&#8457;</span>
+          <!-- <p class="col-2-temp-value" >
+          {{ temp ? "20" : "90"  }} <span *ngIf="temp">&#8451;</span>
+          <span *ngIf="!temp">&#8457;</span> -->
+        </p>
+        <p class="col-2-wind-value">
+          {{
+            wind_direction
+              ? currentCondition?.wind?.km
+              : currentCondition?.wind?.mile
+          }}
+          <span *ngIf="wind_direction">{{ wind_KM_unit }}</span>
+          <span *ngIf="!wind_direction">{{ wind_MILE_unit }}</span>
+        </p>
+        <!-- <p class="col-2-wind-value">
+          2 <span *ngIf="temp">{{ wind_KM }}</span>
+          <span *ngIf="!temp">{{ wind_MILE }}</span>
+        </p> -->
+        <hr class="col-2-bottom-weather-detail" style="margin-top: 0px" />
+        <div class="col-2-history">
+          <div class="frequent" *ngIf="historyData.length">
+            <h2
+              class="frequently-search"
+              style="
+                margin-top: -15px;
+                font-family: 'Ubuntu', sans-serif;
+                font-size: 50px;
+                color: rgb(7, 79, 142);
+              "
+            >
+              Your Cities
+            </h2>
+            <div>
+              <div class="grid-container" *ngIf="historyData.length">
+                <div *ngFor="let history of historyData; let i = index">
+                  <div class="grid-item">
+                    <p class="grid-para" style="color: brown;">{{ history.city }}</p>
+                    <div class="grid-temp">
+                      {{ history.temp }}
+                      <p>&#8451;</p>
+                    </div>
+                    <p class="grid-comment">{{ history.comment }}</p>
+                    <img
+                      src="https://ssl.gstatic.com/onebox/weather/64/partly_cloudy.png"
+                      alt="icon"
+                      style="height: 70px; width: 70px"
+                    />
+                    <div class="row" style="margin-left: 10%; margin-top: 7%;">
+                      <div class="column-svg">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="col-md-3"
+                          viewBox="150 0 150 700"
+                          style="height: 50px; width: 50px;cursor: pointer;"
+                          (click)="options(i)"
+                        >
+                          <path
+                            d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM31.1 128H416V448C416 483.3 387.3 512 352 512H95.1C60.65 512 31.1 483.3 31.1 448V128zM111.1 208V432C111.1 440.8 119.2 448 127.1 448C136.8 448 143.1 440.8 143.1 432V208C143.1 199.2 136.8 192 127.1 192C119.2 192 111.1 199.2 111.1 208zM207.1 208V432C207.1 440.8 215.2 448 223.1 448C232.8 448 240 440.8 240 432V208C240 199.2 232.8 192 223.1 192C215.2 192 207.1 199.2 207.1 208zM304 208V432C304 440.8 311.2 448 320 448C328.8 448 336 440.8 336 432V208C336 199.2 328.8 192 320 192C311.2 192 304 199.2 304 208z"
+                          />
+                        </svg>
+                      </div>
+                      <div class="column-svg">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="col-md-3"
+                          viewBox="150 0 150 700"
+                          style="height: 50px; width: 50px;cursor: pointer;"
+                          (click)="updateFromApi(history.city,i)"
+                        >
+                          <path
+                            d="M464 16c-17.67 0-32 14.31-32 32v74.09C392.1 66.52 327.4 32 256 32C161.5 32 78.59 92.34 49.58 182.2c-5.438 16.81 3.797 34.88 20.61 40.28c16.89 5.5 34.88-3.812 40.3-20.59C130.9 138.5 189.4 96 256 96c50.5 0 96.26 24.55 124.4 64H336c-17.67 0-32 14.31-32 32s14.33 32 32 32h128c17.67 0 32-14.31 32-32V48C496 30.31 481.7 16 464 16zM441.8 289.6c-16.92-5.438-34.88 3.812-40.3 20.59C381.1 373.5 322.6 416 256 416c-50.5 0-96.25-24.55-124.4-64H176c17.67 0 32-14.31 32-32s-14.33-32-32-32h-128c-17.67 0-32 14.31-32 32v144c0 17.69 14.33 32 32 32s32-14.31 32-32v-74.09C119.9 445.5 184.6 480 255.1 480c94.45 0 177.4-60.34 206.4-150.2C467.9 313 458.6 294.1 441.8 289.6z"
+                          />
+                        </svg>
+                      </div>
+                      <div class="column-svg">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="col-md-3"
+                          viewBox="150 0 150 700"
+                          style="height: 50px; width: 50px;cursor: pointer;"
+                          (click)="callData(history.city,i)"
+                        >
+                          <path
+                            d="M279.6 160.4C282.4 160.1 285.2 160 288 160C341 160 384 202.1 384 256C384 309 341 352 288 352C234.1 352 192 309 192 256C192 253.2 192.1 250.4 192.4 247.6C201.7 252.1 212.5 256 224 256C259.3 256 288 227.3 288 192C288 180.5 284.1 169.7 279.6 160.4zM480.6 112.6C527.4 156 558.7 207.1 573.5 243.7C576.8 251.6 576.8 260.4 573.5 268.3C558.7 304 527.4 355.1 480.6 399.4C433.5 443.2 368.8 480 288 480C207.2 480 142.5 443.2 95.42 399.4C48.62 355.1 17.34 304 2.461 268.3C-.8205 260.4-.8205 251.6 2.461 243.7C17.34 207.1 48.62 156 95.42 112.6C142.5 68.84 207.2 32 288 32C368.8 32 433.5 68.84 480.6 112.6V112.6zM288 112C208.5 112 144 176.5 144 256C144 335.5 208.5 400 288 400C367.5 400 432 335.5 432 256C432 176.5 367.5 112 288 112z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+        </div>
+        <button
+          type="reset"
+          class="btn btn-danger"
+          style="text-align: center; margin-top: 5px; margin-left: 200px"
+          (click)="deleteAll()"
+          *ngIf="historyData.length"
+        >
+          Clear History
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
